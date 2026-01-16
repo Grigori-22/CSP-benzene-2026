@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Copy this script into directory that need bulk submission of dft caluclations required to calculate interaction energies.
+# In the same directory you also need dftb_submit with proper parameters, and .xyz files created by getNNpairs.py.
+# Name of dftb_submit MUST be in 8th line or change the number in line with "sed -i [...]" under here.
+
+suffix='.xyz'
+
+if test -f "listOfCombinations.txt"; then
+ rm listOfCombinations.txt   #removes such file if it exists
+fi
+
+touch listOfCombinations.txt   #makes an empty txt file
+
+geometries=`ls *xyz`   #searches for correct .xyz files
+
+for eachfile in $geometries   #goes through their names
+do
+ shortname=`echo "$eachfile" | sed -e "s/$suffix$//"`   #deletes .xyz at the end from their name
+ mkdir $shortname   #makes a directory with such name
+ mv $eachfile ./$shortname/start.xyz   #moves each file into respective directory changing its name to start.xyz
+ cp ./dftb_submit ./$shortname/   #copies slurm to each directory
+ cp ./dftb_in.hsd ./$shortname/   #copies slurm to each directory
+ cd $shortname   #now it'll work from specific directories
+ sed -i "8s/.*/#SBATCH --job-name=$shortname/" ./dftb_submit   #changes name of calculation in slurms in each directory
+ sbatch dftb_submit   #submits slurm
+ cd ../
+done
+

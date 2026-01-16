@@ -1,0 +1,31 @@
+Geometry = GenFormat {
+ <<<"start.gen"
+}
+
+Hamiltonian = xtb {
+  Method = "GFN2-xTB"
+  SCCTolerance = 1.0E-8
+  Charge =0
+  SlaterKosterFiles {
+  C-C = "../../slakos/3ob/C-C.skf"
+  C-H = "../../slakos/3ob/C-H.skf"
+  H-H = "../../slakos/3ob/H-H.skf"
+  } 
+  KPointsAndWeights = SupercellFolding {
+    2 0 0
+    0 2 0
+    0 0 2
+    0.5 0.5 0.5
+  }
+}
+
+
+#Driver = SecondDerivatives {
+#    Delta = 1E-4
+#}
+
+Hessian = {
+  <<< "hessian.out"
+}
+
+InputVersion = 3

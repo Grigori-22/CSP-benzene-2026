@@ -1,0 +1,24 @@
+#!/bin/bash -l
+## Nazwa zlecenia
+#SBATCH -J dftb
+## Liczba węzłów
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --ntasks-per-core=1
+#SBATCH --job-name=g0-b44-r0
+##SBATCH --time=6:00:00 
+#SBATCH --output="out.out2"
+#SBATCH -p cpu
+##SBATCH --exclude=n[01-04],n[09-11]
+#SBATCH --mem=3GB
+
+cd $SLURM_SUBMIT_DIR
+
+module load dftb/23.1
+export OMP_NUM_THREADS=1
+
+echo "Running in " $SLURM_SUBMIT_DIR
+
+#uruchomienie programu
+mpirun dftb+ 
+
